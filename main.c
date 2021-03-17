@@ -1,6 +1,31 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <waitpkgintrin.h>
+#include <unistd.h>
+#include <time.h>
+
+#define WIDTH 10
+#define HEIGHT 10
+
+// 食物
+typedef struct Food {
+    int x; // x坐标
+    int y; // y坐标
+    int status; // 1-未被吃 2-已被吃
+} TFood;
+
+/**
+ * 生成食物
+ * @return
+ */
+TFood * produce() {
+    srand((unsigned int)time(NULL));
+
+    TFood *food = (TFood *) malloc(sizeof(TFood));
+    food->x = rand() % WIDTH;
+    food->y = rand() % HEIGHT;
+    food->status = 1;
+    return food;
+}
 
 // 组成蛇身子的点
 typedef struct Point {
@@ -133,15 +158,15 @@ void move(TSnake *s, int direction) {
 }
 
 void display(TSnake *s) {
-    char area[100][100] = {{'\0'}};
+    char area[10][10] = {{'\0'}};
     TPoint *p = s->head;
     while (NULL != p) {
         area[p->y][p->x] = '*';
         p = p->previous;
     }
     int i, j;
-    for (i = 0; i < 100; i++) {
-        for (j = 0; j < 100; j++) {
+    for (i = 0; i < 10; i++) {
+        for (j = 0; j < 10; j++) {
             printf("%c ", area[i][j]);
         }
         printf("\n");
@@ -162,8 +187,8 @@ int main() {
     while (1) {
         system("clear");
         display(&snake);
-        moveRight(&snake);
-        sleep();
+        move(&snake, 4);
+        sleep(1);
     }
     return 0;
 }
